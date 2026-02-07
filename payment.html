@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام الدفع - مجموعة الغذاء</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #22C55E;
+            --primary-light: #86EFAC;
+            --primary-dark: #166534;
+            --secondary: #3B82F6;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --dark: #0F172A;
+            --gray-900: #111827;
+            --gray-700: #374151;
+            --gray-600: #4B5563;
+            --gray-500: #6B7280;
+            --gray-400: #9CA3AF;
+            --gray-300: #D1D5DB;
+            --gray-200: #E5E7EB;
+            --gray-100: #F3F4F6;
+            --gray-50: #F9FAFB;
+            --white: #FFFFFF;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--gray-900);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Checkout Steps */
+        .steps-bar {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 24px;
+        }
+
+        .steps-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border: 2px solid var(--gray-300);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--gray-500);
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .step.completed .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: 14px;
+            color: var(--gray-500);
+            font-weight: 600;
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+        }
+
+        /* Payment Section */
+        .payment-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 32px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .payment-option {
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary-light);
+        }
+
+        .payment-option.selected {
+            border-color: var(--primary);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .payment-radio {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--gray-400);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .payment-option.selected .payment-radio {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .payment-radio i {
+            color: var(--white);
+            font-size: 12px;
+            opacity: 0;
+        }
+
+        .payment-option.selected .payment-radio i {
+            opacity: 1;
+        }
+
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-100);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .payment-desc {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* Bank Transfer Details */
+        .bank-details {
+            display: none;
+            margin-top: 24px;
+            padding: 24px;
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .bank-details.active {
+            display: block;
+        }
+
+        .bank-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .bank-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .bank-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .bank-name {
+            font-weight: 700;
+        }
+
+        .bank-account {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+
+        .account-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+
+        .account-value {
+            font-weight: 700;
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        .copy-btn {
+            padding: 8px 16px;
+            background: var(--white);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Upload Receipt */
+        .upload-section {
+            margin-top: 24px;
+        }
+
+        .upload-label {
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+            color: var(--gray-400);
+        }
+
+        .upload-text {
+            color: var(--gray-600);
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: var(--gray-400);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .summary-header {
+            padding: 24px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .summary-subtitle {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .summary-body {
+            padding: 24px;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .item-image-small {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .item-image-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name-small {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .item-qty {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gray-900);
+            padding-top: 12px;
+            border-top: 2px solid var(--gray-200);
+            margin-top: 12px;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            font-family: 'Cairo', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pay-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .payment-section {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                padding: 0 16px;
+            }
+
+            .step-label {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-main">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shopping-basket"></i>
+                </div>
+                <span class="logo-text">مجموعة الغذاء</span>
+            </a>
+            <div class="secure-badge">
+                <i class="fas fa-lock"></i>
+                دفع آمن
+            </div>
+        </div>
+    </header>
+
+    <!-- Steps -->
+    <div class="steps-bar">
+        <div class="steps-container">
+            <div class="step completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <span class="step-label">السلة</span>
+            </div>
+            <div class="step completed">
+                <div class="step-number"><i class="fas fa-check"></i></div>
+                <span class="step-label">العنوان</span>
+            </div>
+            <div class="step active">
+                <div class="step-number">3</div>
+                <span class="step-label">الدفع</span>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <span class="step-label">التأكيد</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Section -->
+    <section class="payment-section">
+        <div class="payment-content">
+            <div class="payment-methods">
+                <h2 class="section-title">اختر طريقة الدفع</h2>
+
+                <!-- Bank Transfer -->
+                <div class="payment-option selected" onclick="selectPayment(this, 'bank')">
+                    <div class="payment-radio"><i class="fas fa-check"></i></div>
+                    <div class="payment-icon" style="background: #E8F5E9; color: var(--primary);">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="payment-info">
+                        <div class="payment-name">تحويل بنكي</div>
+                        <div class="payment-desc">حول المبلغ مباشرة إلى أحد حساباتنا البنكية</div>
+                    </div>
+                </div>
+
+                <!-- Bank Details -->
+                <div class="bank-details active" id="bank-details">
+                    <div class="bank-card">
+                        <div class="bank-header">
+                            <div class="bank-logo">بنك</div>
+                            <div>
+                                <div class="bank-name">البنك الأهلي السعودي</div>
+                                <div style="font-size: 13px; color: var(--gray-500);">SA32 8000 0000 1234 5678 9012</div>
+                            </div>
+                        </div>
+                        <div class="bank-account">
+                            <div>
+                                <div class="account-label">رقم الحساب</div>
+                                <div class="account-value">12345678901234</div>
+                            </div>
+                            <button class="copy-btn" onclick="copyAccount('12345678901234')">
+                                <i class="fas fa-copy"></i> نسخ
+                            </button>
+                        </div>
+                        <div class="bank-account">
+                            <div>
+                                <div class="account-label">الآيبان</div>
+                                <div class="account-value">SA32 8000 0000 1234 5678 9012</div>
+                            </div>
+                            <button class="copy-btn" onclick="copyAccount('SA3280000000123456789012')">
+                                <i class="fas fa-copy"></i> نسخ
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        <div class="bank-header">
+                            <div class="bank-logo" style="background: var(--secondary);">بنك</div>
+                            <div>
+                                <div class="bank-name">بنك الرياض</div>
+                                <div style="font-size: 13px; color: var(--gray-500);">SA38 2000 0000 9876 5432 1098</div>
+                            </div>
+                        </div>
+                        <div class="bank-account">
+                            <div>
+                                <div class="account-label">رقم الحساب</div>
+                                <div class="account-value">98765432109876</div>
+                            </div>
+                            <button class="copy-btn" onclick="copyAccount('98765432109876')">
+                                <i class="fas fa-copy"></i> نسخ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Receipt -->
+                    <div class="upload-section">
+                        <label class="upload-label">رفع إيصال التحويل</label>
+                        <div class="upload-area" onclick="document.getElementById('receipt').click()">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">اضغط هنا لرفع الإيصال</div>
+                            <div class="upload-hint">PDF, JPG, PNG (Max 5MB)</div>
+                            <input type="file" id="receipt" hidden accept=".pdf,.jpg,.jpeg,.png">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Card -->
+                <div class="payment-option" onclick="selectPayment(this, 'card')">
+                    <div class="payment-radio"><i class="fas fa-check"></i></div>
+                    <div class="payment-icon" style="background: #E3F2FD; color: var(--secondary);">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="payment-info">
+                        <div class="payment-name">بطاقة ائتمانية</div>
+                        <div class="payment-desc">فيزا، ماستركارد، مدى</div>
+                    </div>
+                </div>
+
+                <!-- Apple Pay -->
+                <div class="payment-option" onclick="selectPayment(this, 'apple')">
+                    <div class="payment-radio"><i class="fas fa-check"></i></div>
+                    <div class="payment-icon" style="background: #000; color: #fff;">
+                        <i class="fab fa-apple"></i>
+                    </div>
+                    <div class="payment-info">
+                        <div class="payment-name">Apple Pay</div>
+                        <div class="payment-desc">دفع سريع وآمن</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <div class="summary-card">
+                <div class="summary-header">
+                    <div class="summary-title">ملخص الطلب</div>
+                    <div class="summary-subtitle">رقم الطلب: #GB-2024-001</div>
+                </div>
+                <div class="summary-body">
+                    <div class="item-row">
+                        <div class="item-image-small">
+                            <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=100&h=100&fit=crop" alt="Olive Oil">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name-small">زيت زيتون بكر ممتاز</div>
+                            <div class="item-qty">الكمية: 1</div>
+                        </div>
+                        <div class="item-price">117 ريال</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-image-small">
+                            <img src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=100&h=100&fit=crop" alt="Apples">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name-small">تفاح أحمر طازج</div>
+                            <div class="item-qty">الكمية: 1</div>
+                        </div>
+                        <div class="item-price">72 ريال</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item-image-small">
+                            <img src="https://images.unsplash.com/photo-1587593810167-a84920ea0782?w=100&h=100&fit=crop" alt="Rice">
+                        </div>
+                        <div class="item-info">
+                            <div class="item-name-small">أرز بسمتي هندي</div>
+                            <div class="item-qty">الكمية: 2</div>
+                        </div>
+                        <div class="item-price">300 ريال</div>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>المجموع الفرعي</span>
+                        <span>489 ريال</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>الشحن</span>
+                        <span style="color: var(--primary);">مجاني</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>الخصم</span>
+                        <span style="color: var(--danger);">-211 ريال</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>الإجمالي</span>
+                        <span>489 ريال</span>
+                    </div>
+                </div>
+                <button class="pay-btn" onclick="completePayment()">
+                    <i class="fas fa-lock"></i>
+                    تأكيد الدفع
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function selectPayment(element, method) {
+            document.querySelectorAll('.payment-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            document.querySelectorAll('.bank-details').forEach(details => {
+                details.classList.remove('active');
+            });
+
+            if (method === 'bank') {
+                document.getElementById('bank-details').classList.add('active');
+            }
+        }
+
+        function copyAccount(account) {
+            navigator.clipboard.writeText(account).then(() => {
+                showNotification('تم نسخ رقم الحساب');
+            });
+        }
+
+        function completePayment() {
+            const btn = document.querySelector('.pay-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المعالجة...';
+            
+            setTimeout(() => {
+                window.location.href = 'confirmation.html';
+            }, 2000);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--primary);
+                color: white;
+                padding: 16px 32px;
+                border-radius: var(--radius-md);
+                font-weight: 600;
+                z-index: 9999;
+                animation: fadeInUp 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 2000);
+        }
+
+        // File upload preview
+        document.getElementById('receipt').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                document.querySelector('.upload-text').textContent = 'تم اختيار: ' + fileName;
+                document.querySelector('.upload-area').style.borderColor = 'var(--primary)';
+                document.querySelector('.upload-area').style.background = 'rgba(34, 197, 94, 0.05)';
+            }
+        });
+    </script>
+</body>
+</html>
