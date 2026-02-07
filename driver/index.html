@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق السائق - Driver Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #22C55E;
+            --primary-light: #86EFAC;
+            --primary-dark: #166534;
+            --secondary: #3B82F6;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --dark: #0F172A;
+            --gray-900: #111827;
+            --gray-700: #374151;
+            --gray-600: #4B5563;
+            --gray-500: #6B7280;
+            --gray-400: #9CA3AF;
+            --gray-300: #D1D5DB;
+            --gray-200: #E5E7EB;
+            --gray-100: #F3F4F6;
+            --gray-50: #F9FAFB;
+            --white: #FFFFFF;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.6;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            background: var(--white);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--white);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .app-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--secondary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+
+        .notification-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-100);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            background: var(--danger);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat-box {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        .stat-value.done {
+            color: var(--primary);
+        }
+
+        /* Action Button */
+        .action-container {
+            padding: 0 20px 20px;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 18px;
+            background: var(--secondary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-lg);
+            font-family: 'Cairo', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Deliveries List */
+        .deliveries-section {
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sort-btn {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .delivery-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .delivery-card.next-stop {
+            border-color: var(--secondary);
+            border-width: 2px;
+        }
+
+        .next-badge {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .delivery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .delivery-name {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .delivery-distance {
+            background: var(--gray-100);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        .delivery-address {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-500);
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .delivery-meta {
+            display: flex;
+            gap: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .delivery-arrow {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            width: 36px;
+            height: 36px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .nav-item.active {
+            color: var(--secondary);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="app-logo">
+                <div class="app-logo-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                Driver Connect
+            </div>
+            <button class="notification-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">تم التوصيل</div>
+                <div class="stat-value done">12</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">متبقي</div>
+                <div class="stat-value">08</div>
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="action-container">
+            <button class="btn-start">
+                <i class="fas fa-location-arrow"></i>
+                بدء المسار الأمثل
+            </button>
+        </div>
+
+        <!-- Deliveries -->
+        <div class="deliveries-section">
+            <div class="section-header">
+                <h2 class="section-title">التوصيلات المخصصة</h2>
+                <button class="sort-btn">الأقرب</button>
+            </div>
+
+            <div class="delivery-card next-stop">
+                <span class="next-badge">التالي</span>
+                <div class="delivery-header">
+                    <h3 class="delivery-name">مجموعة وادي الخضراء</h3>
+                </div>
+                <div class="delivery-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    452 شارع البستان، الجنوبية
+                </div>
+                <div class="delivery-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-box"></i>
+                        14 منتج
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        5 طلبات
+                    </span>
+                </div>
+                <div class="delivery-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+
+            <div class="delivery-card">
+                <div class="delivery-header">
+                    <h3 class="delivery-name">مجموعة آكلي الصحي</h3>
+                    <span class="delivery-distance">2.4 كم</span>
+                </div>
+                <div class="delivery-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    1220 شارع القرنفل، الشرقية
+                </div>
+                <div class="delivery-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-box"></i>
+                        8 منتجات
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        3 طلبات
+                    </span>
+                </div>
+                <div class="delivery-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+
+            <div class="delivery-card">
+                <div class="delivery-header">
+                    <h3 class="delivery-name">مجموعة جيران الفاكهة</h3>
+                    <span class="delivery-distance">3.8 كم</span>
+                </div>
+                <div class="delivery-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    889 طريق الصنوبر، الحديقة الجنوبية
+                </div>
+                <div class="delivery-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-box"></i>
+                        22 منتج
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        7 طلبات
+                    </span>
+                </div>
+                <div class="delivery-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+
+            <div class="delivery-card">
+                <div class="delivery-header">
+                    <h3 class="delivery-name">مجموعة الربيع</h3>
+                    <span class="delivery-distance">5.2 كم</span>
+                </div>
+                <div class="delivery-address">
+                    <i class="fas fa-map-marker-alt"></i>
+                    234 شارع الياسمين، الغربية
+                </div>
+                <div class="delivery-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-box"></i>
+                        18 منتج
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        6 طلبات
+                    </span>
+                </div>
+                <div class="delivery-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-clipboard-list"></i>
+                المهام
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-map"></i>
+                الخريطة
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-wallet"></i>
+                الأرباح
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                الحساب
+            </a>
+        </nav>
+    </div>
+</body>
+</html>
